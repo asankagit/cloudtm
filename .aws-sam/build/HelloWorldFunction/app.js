@@ -15,7 +15,6 @@ let response;
  * @returns {Object} object - API Gateway Lambda Proxy Output Format
  * 
  */
-
 exports.lambdaHandler = async (event, context) => {
     try {
         const ret = await axios({ method: "get",url:"https://httpbin.org/get"}).then(res => res.data).catch(e => e);
@@ -40,12 +39,4 @@ exports.lambdaHandler = async (event, context) => {
  * {const reader = body.getReader(); return reader.read().then(  ({done, value}) => console.log(">>",done,value))   }).catch(e => console.log(e))
  * 
  * var str = String.fromCharCode.apply(null, temp1);
- * 
- * event source example
- * https://blog.risingstack.com/event-sourcing-with-examples-node-js-at-scale/
- * 
- * 
- * node .gyp run
- * https://blog.usejournal.com/how-to-run-native-addon-modules-for-node-js-in-aws-lambda-aa74e1a9010
  */
-
