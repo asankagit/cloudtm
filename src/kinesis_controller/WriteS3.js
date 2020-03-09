@@ -1,10 +1,11 @@
 const S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+import * as config from "../../config/evars.json";
 
 export const s3stream = new S3StreamLogger({
-             bucket: "aws-sam-cli-managed-default-samclisourcebucket-11ckjuy8eoxq8",
-             folder: "nodejslambda",
-      access_key_id: "AKIAUXPMTIE6UCEQFDPD",
-  secret_access_key: "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"
+  bucket: config.secret_access_key,
+  folder: "nodejslambda",
+  access_key_id: config.access_key_id,
+  secret_access_key: config.secret_access_key
 });
 
 // s3stream.write("hello s3")

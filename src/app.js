@@ -1,9 +1,8 @@
-const axios = require('axios')
-// const url = 'http://checkip.amazonaws.com/';
+
 let response;
 import { s3stream } from "./kinesis_controller/WriteS3"
 import express from "express"
-// const fetch = require("node-fetch")
+
 
 /**
  *
@@ -20,15 +19,6 @@ import express from "express"
 
 exports.lambdaHandler = async (event, context) => {
     try {
-        // console.log("handler rops", event, context)
-        // event.Records.forEach(function(record) {
-        //     // Kinesis data is base64 encoded so decode here
-        //     var payload = Buffer.from(record.kinesis.data, 'base64').toString('ascii');
-        //     console.log('Decoded payload:', payload);
-        // });
-
-        const ret = await axios({ method: "get",url:"https://httpbin.org/get"}).then(res => res.data).catch(e => e);
-        // console.log(ret)
         response = {
             'statusCode': 200,
             'body': JSON.stringify({

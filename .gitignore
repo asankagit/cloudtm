@@ -109,3 +109,5 @@ dist
 
 .aws-sam/build
 node_modules/
+
+config/evars.json
