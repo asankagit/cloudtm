@@ -107,5 +107,5 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-aws-sam/build
-hello-worl/node_modules
+.aws-sam/build
+node_modules/

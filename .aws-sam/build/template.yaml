@@ -19,6 +19,18 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+  KinesisListenerFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: KinesisListenerFunction
+      Handler: app.lambdaHandler
+      Runtime: nodejs12.x
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /kinesis_listener
+            Method: get
 Outputs:
   HelloWorldApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World function
@@ -28,5 +40,15 @@ Outputs:
     Description: Hello World Lambda Function ARN
     Value: !<!GetAtt> HelloWorldFunction.Arn
   HelloWorldFunctionIamRole:
+    Description: Implicit IAM Role created for Hello World function
+    Value: !<!GetAtt> HelloWorldFunctionRole.Arn
+  KinsesisListenerApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value: !<!Sub> >-
+      https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/kiness_listener/
+  KinsesisListenerFunction:
+    Description: Hello World Lambda Function ARN
+    Value: !<!GetAtt> HelloWorldFunction.Arn
+  KinsesisListenerFunctionIamRole:
     Description: Implicit IAM Role created for Hello World function
     Value: !<!GetAtt> HelloWorldFunctionRole.Arn

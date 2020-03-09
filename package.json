@@ -7,9 +7,12 @@
   "author": "SAM CLI",
   "license": "MIT",
   "dependencies": {
+    "aws-sdk": "^2.635.0",
     "axios": "^0.18.0",
     "express": "^4.17.1",
-    "mongoose": "^5.9.3"
+    "mongoose": "^5.9.3",
+    "s3-streamlogger": "^1.6.1",
+    "s3-upload-stream": "^1.0.7"
   },
   "scripts": {
     "test": "mocha tests/unit/",

@@ -3,8 +3,9 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "nodejslambda"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1fwleyjisngym"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-11ckjuy8eoxq8"
 s3_prefix = "nodejslambda"
-region = "us-east-2"
+region = "ap-south-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
+

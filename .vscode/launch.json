@@ -15,6 +15,21 @@
         "${workspaceRoot}/.aws-sam/build/HelloWorldFunction/app.js"
       ],
       "sourceMaps": true
+    },
+    {
+      "name": "KinesisListenerFunction",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5858,
+      "localRoot": "${workspaceRoot}/.aws-sam/build/KinesisListenerFunction",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "outFiles": [
+        "${workspaceRoot}/.aws-sam/build/KinesisListenerFunction/app.js"
+      ],
+      "sourceMaps": true
     }
   ]
 }
