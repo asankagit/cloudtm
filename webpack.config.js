@@ -15,6 +15,7 @@ module.exports = {
 
       // Add the AWS SAM Webpack plugin
     plugins: [awsSamPlugin]
+
 }
 
 /* 
