@@ -17,8 +17,20 @@ Resources:
         HelloWorld:
           Type: Api
           Properties:
-            Path: /hello
+            Path: /clickstream
             Method: get
+  WriteClickStreamFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: WriteClickStreamFunction
+      Handler: app.clickStreamWriteHandler
+      Runtime: nodejs12.x
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /clickstream
+            Method: post
   KinesisListenerFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -35,7 +47,7 @@ Outputs:
   HelloWorldApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World function
     Value: !<!Sub> >-
-      https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
+      https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/clickstream/
   HelloWorldFunction:
     Description: Hello World Lambda Function ARN
     Value: !<!GetAtt> HelloWorldFunction.Arn
@@ -50,5 +62,15 @@ Outputs:
     Description: Hello World Lambda Function ARN
     Value: !<!GetAtt> HelloWorldFunction.Arn
   KinsesisListenerFunctionIamRole:
+    Description: Implicit IAM Role created for Hello World function
+    Value: !<!GetAtt> HelloWorldFunctionRole.Arn
+  WriteClickStreamApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value: !<!Sub> >-
+      https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/kiness_listener/
+  WriteClickStreamFunction:
+    Description: Hello World Lambda Function ARN
+    Value: !<!GetAtt> WriteClickStream.Arn
+  WriteClickStreamFunctionIamRole:
     Description: Implicit IAM Role created for Hello World function
     Value: !<!GetAtt> HelloWorldFunctionRole.Arn
