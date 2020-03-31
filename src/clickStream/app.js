@@ -30,7 +30,7 @@ exports.clickStreamWriteHandler = (event,context, callback) => {
                 // resolve(data);
                 callback(null, {
                     statusCode: 200,
-                    body: JSON.stringify(data),
+                    body: "success",
                 })
             }
         })

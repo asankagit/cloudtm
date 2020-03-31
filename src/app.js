@@ -5,32 +5,13 @@ const dynamodb = new AWS.DynamoDB({
 });
 exports.lambdaHandler = async (event, context) => {
  
-// Non-Async way
-// dynamodb.putItem({
-//             TableName: 'CUSTOMER_LIST',
-//             Item: {
-//                 'CUSTOMER_ID': { N: '043' },
-//                 'CUSTOMER_NAME': { S: 'Corona' }
-//             }
-//         }
-//         , function(err, data) {
-//             if (err) {
-//                 console.log("err", err);
-//                 // reject(err);
-//                 callback(null, {
-//                     statusCode: 200,
-//                     body: JSON.stringify(err),
-//                 })
-//             } else {
-//                 console.log("success", data);
-//                 // resolve(data);
-//                 callback(null, {
-//                     statusCode: 200,
-//                     body: JSON.stringify(data),
-//                 })
-//             }
-//         })
-        
+const { queryStringParameters,  multiValueQueryStringParameters, body } = event
+const { filter, basketId } = queryStringParameters
+// const bodyParams = JSON.parse(body)
+// const { basketId } = bodyParams
+
+
+// console.log(basketId)
 // Async way
 const promise = new Promise(function(resolve, reject){
 
@@ -39,11 +20,17 @@ const promise = new Promise(function(resolve, reject){
     //     resolve({statusCode: 200, body: "resolvedx"})
     // }, 200)
 
-    dynamodb.putItem({
-        TableName: 'CUSTOMER_LIST',
-        Item: {
-            'CUSTOMER_ID': { N: '036' },
-            'CUSTOMER_NAME': { S: 'vilo' }
+    dynamodb.query({
+        // ExpressionAttributeValues: {
+        //     ':basket': basketId
+        // },
+        TableName: 'BASKET_EVENTS',
+        IndexName: "BASKET_ID-TIME_STAMP-index",
+        ProjectionExpression: "EVENT_TYPE",
+        KeyConditionExpression: "BASKET_ID = :basket",
+
+        ExpressionAttributeValues: {
+            ":basket": {S : basketId}
         }
     }
     , function(err, data) {
@@ -56,6 +43,7 @@ const promise = new Promise(function(resolve, reject){
         }
     })
 })
+
 
 return promise
 };
