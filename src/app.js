@@ -3,6 +3,47 @@ const dynamodb = new AWS.DynamoDB({
     region: 'ap-south-1',
     apiVersion: '2012-08-10'
 });
+
+
+function fetFinalStateFromBucket(){
+    const array1 = [{count:1, item: "Single room", type: "add" },
+                {count:3, item: "Double room", type: "add" },
+                {count:2, item: "Single room", type: "add" },
+                {count:3, item: "Double room", type: "remove" }
+               ];
+const reducer = (acc, curr) => {
+  //console.log(acc,curr)
+  acc[curr.item] = curr.item
+  return acc
+}
+
+const sortedRooms = array1.reduce(reducer, {})
+const finalState = []
+
+for(let roomtype in sortedRooms) {
+  let tmpCount = 0
+  array1.filter(r => r.item === roomtype).map(room => {
+    if(room.type === "add") {
+    	tmpCount = tmpCount + room.count
+    }
+    else if (room.type === "remove") {
+    	tmpCount = tmpCount - room.count
+    }
+
+  })
+  
+    finalState.push({
+    	item: roomtype,
+      	count: tmpCount
+    })
+  
+}
+
+return finalState
+
+}
+
+
 exports.lambdaHandler = async (event, context) => {
  
 const { queryStringParameters,  multiValueQueryStringParameters, body } = event
@@ -48,7 +89,28 @@ const promise = new Promise(function(resolve, reject){
 return promise
 };
 
-
+// sampleresponse
+// {
+//     "Items": [
+//         {
+//             "EVENT_TYPE": {
+//                 "S": "remove"
+//             }
+//         },
+//         {
+//             "EVENT_TYPE": {
+//                 "S": "remove"
+//             }
+//         },
+//         {
+//             "EVENT_TYPE": {
+//                 "S": "add"
+//             }
+//         }
+//     ],
+//     "Count": 3,
+//     "ScannedCount": 3
+// }
 
 /**
  * fetch("http://localhost:3000/hello").then(res => res.body).then(body =>
