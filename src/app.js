@@ -41,11 +41,11 @@ function filterStateFromBucket(obj, filter){
 
         let finalResult
         switch(filter) {
-            case 'removed': {
+            case "removed": {
                 finalResult = basketObj.getRemovedItems()
                 break;
             }
-            case 'final' :{
+            case "final" : {
                 finalResult = Basket.fetFinalStateFromBucket(array1)
                 break;
             }
@@ -99,10 +99,11 @@ const responseGeneratePromse = new Promise((resolve, reject) => {
         console.log("final state", finalState)
         resolve({
             statusCode: 200,
-            body: finalState
+            body: JSON.stringify(finalState)
         })
     })
     .catch(e => {
+        console.log("error", e)
         reject(e)
     })
 })
