@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const key = 'ssssh';
 const AWS = require('aws-sdk');
 const dynamodb = new AWS.DynamoDB({ 
-    region: 'ap-southeast-1',
+    region: 'ap-south-1',
     apiVersion: '2012-08-10'
 });
 
