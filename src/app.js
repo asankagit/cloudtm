@@ -4,16 +4,42 @@ const dynamodb = new AWS.DynamoDB({
     apiVersion: '2012-08-10'
 });
 
+function formatDynamoResultToObject(result){
+    const final = []
+    result.map(element => {
+    let tmp = {}
+    ele = JSON.parse(JSON.stringify(element))
+    for(let key in ele) {
+            let tmpObj = ele[key]
+            tmp[key] = tmpObj[Object.keys(tmpObj)]
+    }
+    final.push(tmp)
+    })
+    return final
+}
 
-function fetFinalStateFromBucket(){
-    const array1 = [{count:1, item: "Single room", type: "add" },
-                {count:3, item: "Double room", type: "add" },
-                {count:2, item: "Single room", type: "add" },
-                {count:3, item: "Double room", type: "remove" }
-               ];
+function fetFinalStateFromBucket(obj){
+    const dbResult  = JSON.parse(obj)
+
+    const { Items } = dbResult
+
+    let array1 = []
+    // [{count:1, item: "Single room", type: "add" },
+    //             {count:3, item: "Double room", type: "add" },
+    //             {count:2, item: "Single room", type: "add" },
+    //             {count:3, item: "Double room", type: "remove" }
+    //            ];
+
+    if (Items) {
+        array1 = formatDynamoResultToObject(Items)
+    }
+    else {
+        return []
+    }
+    
 const reducer = (acc, curr) => {
   //console.log(acc,curr)
-  acc[curr.item] = curr.item
+  acc[curr.BASKET_ITEM] = curr.BASKET_ITEM
   return acc
 }
 
@@ -22,19 +48,19 @@ const finalState = []
 
 for(let roomtype in sortedRooms) {
   let tmpCount = 0
-  array1.filter(r => r.item === roomtype).map(room => {
-    if(room.type === "add") {
-    	tmpCount = tmpCount + room.count
+  array1.filter(r => r.BASKET_ITEM === roomtype).map(room => {
+    if(room.EVENT_TYPE === "add") {
+    	tmpCount = parseInt(tmpCount) + parseInt(room.ITEM_COUNT)
     }
-    else if (room.type === "remove") {
-    	tmpCount = tmpCount - room.count
+    else if (room.EVENT_TYPE === "remove") {
+    	tmpCount = parseInt(tmpCount) - parseInt(room.ITEM_COUNT)
     }
 
   })
   
     finalState.push({
     	item: roomtype,
-      	count: tmpCount
+      	count: parseInt(tmpCount)
     })
   
 }
@@ -67,7 +93,7 @@ const promise = new Promise(function(resolve, reject){
         // },
         TableName: 'BASKET_EVENTS',
         IndexName: "BASKET_ID-TIME_STAMP-index",
-        ProjectionExpression: "EVENT_TYPE",
+        ProjectionExpression: "EVENT_TYPE, BASKET_ID, BASKET_ITEM, ITEM_COUNT",
         KeyConditionExpression: "BASKET_ID = :basket",
 
         ExpressionAttributeValues: {
@@ -79,14 +105,26 @@ const promise = new Promise(function(resolve, reject){
             console.log("err", err);
             reject({statusCode:200, body:JSON.stringify(err)});
         } else {
-            console.log("success", data);
+            // console.log("success", data);
             resolve({statusCode:200, body:JSON.stringify(data)});
         }
     })
 })
 
-
-return promise
+const responseGeneratePromse = new Promise((resolve, reject) => {
+    promise.then(dbResult => {
+        const finalState = fetFinalStateFromBucket(dbResult.body)
+        console.log("final state", finalState)
+        resolve({
+            statusCode: 200,
+            body: finalState
+        })
+    })
+    .catch(e => {
+        reject(e)
+    })
+})
+return responseGeneratePromse
 };
 
 // sampleresponse
