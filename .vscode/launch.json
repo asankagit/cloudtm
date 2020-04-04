@@ -45,6 +45,51 @@
         "${workspaceRoot}/.aws-sam/build/KinesisListenerFunction/app.js"
       ],
       "sourceMaps": true
+    },
+    {
+      "name": "UserAddFunction",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5858,
+      "localRoot": "${workspaceRoot}/.aws-sam/build/UserAddFunction",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "outFiles": [
+        "${workspaceRoot}/.aws-sam/build/UserAddFunction/app.js"
+      ],
+      "sourceMaps": true
+    },
+    {
+      "name": "UserSignInFunction",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5858,
+      "localRoot": "${workspaceRoot}/.aws-sam/build/UserSignInFunction",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "outFiles": [
+        "${workspaceRoot}/.aws-sam/build/UserSignInFunction/app.js"
+      ],
+      "sourceMaps": true
+    },
+    {
+      "name": "AuthValidateFunction",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5858,
+      "localRoot": "${workspaceRoot}/.aws-sam/build/AuthValidateFunction",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "outFiles": [
+        "${workspaceRoot}/.aws-sam/build/AuthValidateFunction/app.js"
+      ],
+      "sourceMaps": true
     }
   ]
 }

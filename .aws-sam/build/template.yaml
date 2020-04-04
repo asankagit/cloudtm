@@ -43,6 +43,40 @@ Resources:
           Properties:
             Path: /kinesis_listener
             Method: get
+  UserAddFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: UserAddFunction
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: app.addUser
+      Runtime: nodejs12.x
+      Events:
+        UserAdd:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: post
+  UserSignInFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: UserSignInFunction
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: app.signIn
+      Runtime: nodejs12.x
+      Events:
+        UserSignIn:
+          Type: Api
+          Properties:
+            Path: /users/signIn
+            Method: post
+  AuthValidateFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: AuthValidateFunction
+      Handler: app.authorizer
+      Runtime: nodejs12.x
 Outputs:
   HelloWorldApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World function
