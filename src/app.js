@@ -27,7 +27,7 @@ function filterStateFromBucket(obj, filter){
     const { Items } = dbResult
 
     let array1 = []
-    //-------------------sample format-------------------------------------
+    //----sample format(result from formatDynamoResultToObjec function)---------
     // [{count:1, item: "Single room", type: "add" },
     //             {ITEM_COUNT:3, BASKET_ITEM: "Double room", EVENT_TYPE: "add" },
     //             {ITEM_COUNT:2, BASKET_ITEM: "Single room", EVENT_TYPE: "add" },
@@ -60,35 +60,6 @@ function filterStateFromBucket(obj, filter){
         return []
     }
     
-// const reducer = (acc, curr) => {
-//   acc[curr.BASKET_ITEM] = curr.BASKET_ITEM
-//   return acc
-// }
-
-// const sortedRooms = array1.reduce(reducer, {})
-// const finalState = []
-
-// for(let roomtype in sortedRooms) {
-//   let tmpCount = 0
-//   array1.filter(r => r.BASKET_ITEM === roomtype).map(room => {
-//     if(room.EVENT_TYPE === "add") {
-//     	tmpCount = parseInt(tmpCount) + parseInt(room.ITEM_COUNT)
-//     }
-//     else if (room.EVENT_TYPE === "remove") {
-//     	tmpCount = parseInt(tmpCount) - parseInt(room.ITEM_COUNT)
-//     }
-
-//   })
-  
-//     finalState.push({
-//     	item: roomtype,
-//       	count: parseInt(tmpCount)
-//     })
-  
-// }
-
-// return finalState
-
 }
 
 
