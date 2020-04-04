@@ -52,6 +52,45 @@ Resources:
             Path: /kinesis_listener
             Method: get
 
+  UserAddFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/authentication/
+      Policies:
+        - AmazonDynamoDBFullAccess # Give DynamoDB Full Access to your Lambda Function
+      Handler: users.addUser
+      Runtime: nodejs12.x
+      Events:
+        UserAdd:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /users
+            Method: post
+
+  UserSignInFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/authentication/
+      Policies:
+        - AmazonDynamoDBFullAccess # Give DynamoDB Full Access to your Lambda Function
+      Handler: users.signIn
+      Runtime: nodejs12.x
+      Events:
+        UserSignIn:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /users/signIn
+            Method: post
+
+  AuthValidateFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: src/authentication/
+      Handler: perm.authorizer
+      Runtime: nodejs12.x
+
+
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
