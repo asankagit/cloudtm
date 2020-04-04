@@ -99,6 +99,10 @@ const responseGeneratePromse = new Promise((resolve, reject) => {
         console.log("final state", finalState)
         resolve({
             statusCode: 200,
+            headers: {
+                "x-custom-header" : "my custom header value",
+                "Access-Control-Allow-Origin": "*"
+            },
             body: JSON.stringify(finalState)
         })
     })
