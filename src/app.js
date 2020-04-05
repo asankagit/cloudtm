@@ -50,7 +50,7 @@ function filterStateFromBucket(obj, filter){
                 break;
             }
             default : {
-                finalResult = []
+                finalResult = array1
                 break;
             }
         }
