@@ -1,0 +1,49 @@
+{
+    "TableName": "BASKET_EVENTS",
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "BASKET_ID",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "TIME_STAMP",
+            "AttributeType": "N"
+        }
+    ],
+    "KeySchema": [
+        {
+            "KeyType": "HASH",
+            "AttributeName": "TIME_STAMP"
+        },
+        {
+            "KeyType": "RANGE",
+            "AttributeName": "BASKET_ID"
+        }
+    ],
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "BASKET_ID-TIME_STAMP-index",
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "WriteCapacityUnits": 1,
+                "ReadCapacityUnits": 1
+            },
+            "KeySchema": [
+                {
+                    "KeyType": "HASH",
+                    "AttributeName": "BASKET_ID"
+                },
+                {
+                    "KeyType": "RANGE",
+                    "AttributeName": "TIME_STAMP"
+                }
+            ]
+        }
+    ],
+    "ProvisionedThroughput": {
+        "WriteCapacityUnits": 5,
+        "ReadCapacityUnits": 5
+    }
+}

@@ -77,6 +77,21 @@
       "sourceMaps": true
     },
     {
+      "name": "SiteAddFunction",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5858,
+      "localRoot": "${workspaceRoot}/.aws-sam/build/SiteAddFunction",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "outFiles": [
+        "${workspaceRoot}/.aws-sam/build/SiteAddFunction/app.js"
+      ],
+      "sourceMaps": true
+    },
+    {
       "name": "AuthValidateFunction",
       "type": "node",
       "request": "attach",
