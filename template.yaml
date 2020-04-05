@@ -121,6 +121,21 @@ Resources:
             Path: /sites
             Method: post
             RestApiId: !Ref CloudTagManagerApi
+  SiteListFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/sites/
+      Policies:
+        - AmazonDynamoDBFullAccess # Give DynamoDB Full Access to your Lambda Function
+      Handler: usersites.listSites
+      Runtime: nodejs12.x
+      Events:
+        SiteAdd:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /sites
+            Method: get
+            RestApiId: !Ref CloudTagManagerApi
 
   AuthValidateFunction:
     Type: 'AWS::Serverless::Function'

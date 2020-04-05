@@ -19,7 +19,7 @@ exports.addUserSite = (event, context, callback) => {
     let sitedata = {
         TableName: 'USER_SITES',
         Item: {
-            'USERNAME' : {S: username},
+            'USER_NAME' : {S: username},
             'SITE_ID' : {S: siteid},
             'SITE_NAME' : {S: sitename},
             'DESCRIPTION' : {S: description},
@@ -51,6 +51,53 @@ exports.addUserSite = (event, context, callback) => {
         }
     });
 };
+
+exports.listSites = (event, context, callback) =>{
+    const {Authorization} = event.headers;
+
+    const username = decodeToken(Authorization);
+
+    const siteparams = {
+        TableName: 'USER_SITES',
+        IndexName: "USER_NAME-INDEX",
+        ExpressionAttributeValues: {
+            ':un': {S: username}
+        },
+        KeyConditionExpression: 'USER_NAME = :un'
+    };
+
+
+    dynamodb.query(siteparams, function(err, data) {
+        if (err) {
+            console.log("error", err);
+            callback(null, {
+                statusCode: 400,
+                body: JSON.stringify(err)
+            });
+        }
+        else {
+            console.log("success", data.Items);
+            
+            let siteDataArr = [];
+            data.Items.forEach(function(element, index, array) {
+              siteDataArr.push({
+                  siteId:element.SITE_ID.S,
+                  siteName:element.SITE_NAME.S,
+                  domain:element.DOMAIN.S,
+                  description:element.DESCRIPTION.S
+              });
+            });
+
+            callback(null, {
+                statusCode: 200,
+                body: JSON.stringify({
+                    siteData:siteDataArr,
+                    message:"Sites Retrieved Successfully"
+                })
+            });
+        }
+    });
+}
 
 const decodeToken = function(token){
     try{
