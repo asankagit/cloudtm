@@ -1,0 +1,41 @@
+{
+    "TableName": "USER_SITES",
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "SITE_ID",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "USER_NAME",
+            "AttributeType": "S"
+        }
+    ],
+    "KeySchema": [
+        {
+            "KeyType": "HASH",
+            "AttributeName": "SITE_ID"
+        }
+    ],
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "USER_NAME-INDEX",
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "WriteCapacityUnits": 5,
+                "ReadCapacityUnits": 5
+            },
+            "KeySchema": [
+                {
+                    "KeyType": "HASH",
+                    "AttributeName": "USER_NAME"
+                }
+            ]
+        }
+    ],
+    "ProvisionedThroughput": {
+        "WriteCapacityUnits": 5,
+        "ReadCapacityUnits": 5
+    }
+}

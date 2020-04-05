@@ -10,6 +10,17 @@ Globals:
   Function:
     Timeout: 10
 Resources:
+  CloudTagManagerApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: "'*'"
+      Auth:
+        DefaultAuthorizer: MyLambdaTokenAuthorizer
+        Authorizers: 
+          MyLambdaTokenAuthorizer:
+            FunctionArn: !GetAtt AuthValidateFunction.Arn
+
   HelloWorldFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -23,6 +34,9 @@ Resources:
           Properties:
             Path: /clickstream
             Method: get
+            RestApiId: !Ref CloudTagManagerApi
+            Auth:
+              Authorizer: NONE
 
   WriteClickStreamFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -37,6 +51,9 @@ Resources:
           Properties:
             Path: /clickstream
             Method: post
+            RestApiId: !Ref CloudTagManagerApi
+            Auth:
+              Authorizer: NONE
   
   KinesisListenerFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -51,6 +68,9 @@ Resources:
           Properties:
             Path: /kinesis_listener
             Method: get
+            RestApiId: !Ref CloudTagManagerApi
+            Auth:
+              Authorizer: NONE
 
   UserAddFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -66,6 +86,7 @@ Resources:
           Properties:
             Path: /users
             Method: post
+            RestApiId: !Ref CloudTagManagerApi
 
   UserSignInFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -81,6 +102,25 @@ Resources:
           Properties:
             Path: /users/signIn
             Method: post
+            RestApiId: !Ref CloudTagManagerApi
+            Auth:
+              Authorizer: NONE
+
+  SiteAddFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/sites/
+      Policies:
+        - AmazonDynamoDBFullAccess # Give DynamoDB Full Access to your Lambda Function
+      Handler: usersites.addUserSite
+      Runtime: nodejs12.x
+      Events:
+        SiteAdd:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /sites
+            Method: post
+            RestApiId: !Ref CloudTagManagerApi
 
   AuthValidateFunction:
     Type: 'AWS::Serverless::Function'
@@ -97,7 +137,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HelloWorldApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/clickstream/"
+    Value: !Sub "https://${CloudTagManagerApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/clickstream/"
   HelloWorldFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
@@ -110,7 +150,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   KinsesisListenerApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/kiness_listener/"
+    Value: !Sub "https://${CloudTagManagerApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/kiness_listener/"
   KinsesisListenerFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
@@ -121,7 +161,7 @@ Outputs:
 
   WriteClickStreamApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/kiness_listener/"
+    Value: !Sub "https://${CloudTagManagerApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/kiness_listener/"
   WriteClickStreamFunction:
     Description: "Hello World Lambda Function ARN"
     Value: !GetAtt HelloWorldFunction.Arn
