@@ -11,8 +11,20 @@ const authen = require('./perm.js');
 
 exports.addUser = (event, context, callback) => {
 
+    //Check Role
+    const requesterRole = event.requestContext.authorizer.role;
+    if(requesterRole!='admin'){
+        console.log("Unauthorized");
+        callback(null, {
+            statusCode: 401,
+            body: JSON.stringify({
+                "message":"Insufficient Permission"
+            })
+        });
+    }
+
     const {body} = event;
-    const {username, password, email, timeStamp, basketId} = JSON.parse(body);
+    const {username, password, email, role} = JSON.parse(body);
     let salt = bcrypt.genSaltSync(10);
     let passwordhash = bcrypt.hashSync(password, salt);
 
@@ -21,7 +33,8 @@ exports.addUser = (event, context, callback) => {
         Item: {
             'USERNAME' : {S: username},
             'PASSWORD' : {S: passwordhash},
-            'EMAIL' : {S: email}
+            'EMAIL' : {S: email},
+            'ROLE' : {S: role}
         }
     };
 
@@ -76,7 +89,7 @@ const validatePassword = (user, enteredPassword, callback) => {
     console.log(`validate called user:${user} and enteredPassword:${enteredPassword}`)
     let dbPassHash = user.PASSWORD.S;
     let dbUserName = user.USERNAME.S;
-    let dbUserRole = "userR";
+    let dbUserRole = user.ROLE.S;
 
     console.log(`dbHash ${dbPassHash}`);
     
