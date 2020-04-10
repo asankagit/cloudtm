@@ -1,6 +1,4 @@
 const AWS = require('aws-sdk');
-const jwt = require('jsonwebtoken');
-const key = 'ssssh';
 const dynamodb = new AWS.DynamoDB({ 
     region: 'ap-south-1',
     apiVersion: '2012-08-10'
@@ -12,9 +10,10 @@ exports.addUserSite = (event, context, callback) => {
     const {body} = event;
     const {sitename, description, domain} = JSON.parse(body);
     const siteid = uuidV4();
-    const {Authorization} = event.headers;
-    console.log(`Auth Token is ${Authorization}`);
-    const username = decodeToken(Authorization);
+
+    const username = event.requestContext.authorizer.username;
+    const role = event.requestContext.authorizer.role;
+    console.log(`User:${username} Role:${role}`);
 
     let sitedata = {
         TableName: 'USER_SITES',
@@ -53,9 +52,10 @@ exports.addUserSite = (event, context, callback) => {
 };
 
 exports.listSites = (event, context, callback) =>{
-    const {Authorization} = event.headers;
 
-    const username = decodeToken(Authorization);
+    const username = event.requestContext.authorizer.username;
+    const role = event.requestContext.authorizer.role;
+    console.log(`User:${username} Role:${role}`);
 
     const siteparams = {
         TableName: 'USER_SITES',
@@ -98,13 +98,3 @@ exports.listSites = (event, context, callback) =>{
         }
     });
 }
-
-const decodeToken = function(token){
-    try{
-        let decoded = jwt.verify(token, key);
-        return decoded.user;
-    }
-    catch(err) {
-        return "";
-    }
-};

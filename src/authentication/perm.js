@@ -1,17 +1,13 @@
 const jwt = require('jsonwebtoken');
 const key = 'ssssh';
-const AWS = require('aws-sdk');
-const dynamodb = new AWS.DynamoDB({ 
-    region: 'ap-south-1',
-    apiVersion: '2012-08-10'
-});
 
-function generateAuthResponse(principalId, effect, methodArn) {
-    const policyDocument = generatePolicyDocument(effect, methodArn);
-
+function generateAuthResponse(principalId, effect, userRole) {
+    const policyDocument = generatePolicyDocument(effect, "*");
+    const context = generateContext(principalId, userRole);
     return {
         principalId,
-        policyDocument
+        policyDocument,
+        context
     }
 }
 
@@ -30,34 +26,33 @@ function generatePolicyDocument(effect, methodArn) {
     return policyDocument;
 }
 
-exports.generateToken = function(username){
+function generateContext(username, role){
+    const context = {
+        username: username,
+        role: role
+    };
+    return context;
+}
+
+exports.generateToken = function(username, role){
     let token = jwt.sign({ 
                     user: `${username}`,
+                    role: `${role}`,
                     exp: Math.floor(Date.now() / 1000) + (60 * 60)
                 }, `${key}`);
     return token;
 }
 
-exports.decodeToken = function(token){
-    try{
-        let decoded = jwt.verify(token, key);
-        return decoded.user;
-    }
-    catch(err) {
-        return "";
-    }
-}
-
-
 exports.authorizer = async function (event) {
     const token = event.authorizationToken;
-    const methodArn = event.methodArn;
 
     try{
-        jwt.verify(token, key);
-        return generateAuthResponse('user', 'Allow', methodArn);
+        
+        let decoded = jwt.verify(token, key);
+        return generateAuthResponse(decoded.user, 'Allow', decoded.role);
     }
     catch(err) {
-        return generateAuthResponse('user', 'Deny', methodArn);
+        console.log(`deny err:${err}`);
+        return generateAuthResponse(decoded.user, 'Deny', decoded.role);
     }
 }

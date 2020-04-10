@@ -76,11 +76,12 @@ const validatePassword = (user, enteredPassword, callback) => {
     console.log(`validate called user:${user} and enteredPassword:${enteredPassword}`)
     let dbPassHash = user.PASSWORD.S;
     let dbUserName = user.USERNAME.S;
-    
+    let dbUserRole = "userR";
+
     console.log(`dbHash ${dbPassHash}`);
     
     if(bcrypt.compareSync(enteredPassword, dbPassHash)){
-        let token = authen.generateToken(dbUserName);
+        let token = authen.generateToken(dbUserName, dbUserRole);
         callback(null, {
             statusCode: 200,
             body: JSON.stringify({
