@@ -23,6 +23,10 @@ exports.clickStreamWriteHandler = (event,context, callback) => {
                 // reject(err);
                 callback(null, {
                     statusCode: 200,
+                    headers: {
+                        "x-custom-header" : "my custom header value",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     body: JSON.stringify(err),
                 })
             } else {
@@ -30,6 +34,10 @@ exports.clickStreamWriteHandler = (event,context, callback) => {
                 // resolve(data);
                 callback(null, {
                     statusCode: 200,
+                    headers: {
+                        "x-custom-header" : "my custom header value",
+                        "Access-Control-Allow-Origin": "*"
+                    },
                     body: "success",
                 })
             }

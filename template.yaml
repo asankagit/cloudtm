@@ -9,6 +9,8 @@ Description: >
 Globals:
   Function:
     Timeout: 10
+  Api:
+    Cors: "*"
 Resources:
   CloudTagManagerApi:
     Type: AWS::Serverless::Api

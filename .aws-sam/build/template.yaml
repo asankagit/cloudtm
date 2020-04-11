@@ -6,6 +6,8 @@ Description: |
 Globals:
   Function:
     Timeout: 10
+  Api:
+    Cors: '*'
 Resources:
   CloudTagManagerApi:
     Type: 'AWS::Serverless::Api'
@@ -108,6 +110,21 @@ Resources:
           Properties:
             Path: /sites
             Method: post
+            RestApiId: !<!Ref> CloudTagManagerApi
+  SiteListFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: SiteListFunction
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: app.listSites
+      Runtime: nodejs12.x
+      Events:
+        SiteAdd:
+          Type: Api
+          Properties:
+            Path: /sites
+            Method: get
             RestApiId: !<!Ref> CloudTagManagerApi
   AuthValidateFunction:
     Type: 'AWS::Serverless::Function'
