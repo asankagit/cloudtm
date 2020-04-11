@@ -1,0 +1,41 @@
+{
+    "TableName": "SITE_VISITORS",
+    "AttributeDefinitions": [
+        {
+            "AttributeName": "VISITOR_UID",
+            "AttributeType": "S"
+        },
+        {
+            "AttributeName": "SITE_ID",
+            "AttributeType": "S"
+        }
+    ],
+    "KeySchema": [
+        {
+            "KeyType": "HASH",
+            "AttributeName": "VISITOR_UID"
+        }
+    ],
+    "GlobalSecondaryIndexes": [
+        {
+            "IndexName": "SITE_ID-INDEX",
+            "Projection": {
+                "ProjectionType": "ALL"
+            },
+            "ProvisionedThroughput": {
+                "WriteCapacityUnits": 5,
+                "ReadCapacityUnits": 5
+            },
+            "KeySchema": [
+                {
+                    "KeyType": "HASH",
+                    "AttributeName": "SITE_ID"
+                }
+            ]
+        }
+    ],
+    "ProvisionedThroughput": {
+        "WriteCapacityUnits": 5,
+        "ReadCapacityUnits": 5
+    }
+}
