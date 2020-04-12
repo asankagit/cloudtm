@@ -126,6 +126,38 @@ Resources:
             Path: /sites
             Method: get
             RestApiId: !<!Ref> CloudTagManagerApi
+  VisitorAddFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: VisitorAddFunction
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: app.recordVisitorDetails
+      Runtime: nodejs12.x
+      Events:
+        SiteAdd:
+          Type: Api
+          Properties:
+            Path: /visitors
+            Method: post
+            RestApiId: !<!Ref> CloudTagManagerApi
+            Auth:
+              Authorizer: NONE
+  VisitorListFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: VisitorListFunction
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: app.listVisitorDetails
+      Runtime: nodejs12.x
+      Events:
+        SiteAdd:
+          Type: Api
+          Properties:
+            Path: /visitors
+            Method: get
+            RestApiId: !<!Ref> CloudTagManagerApi
   AuthValidateFunction:
     Type: 'AWS::Serverless::Function'
     Properties:

@@ -40,6 +40,10 @@ exports.recordVisitorDetails = (event, context, callback) => {
             console.log("success", data);
             callback(null, {
                 statusCode: 200,
+                headers: {
+                    "x-custom-header" : "my custom header value",
+                    "Access-Control-Allow-Origin": "*"
+                },
                 body: JSON.stringify({
                     siteId:siteId,
                     sourceIp:sourceIp,

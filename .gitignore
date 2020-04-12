@@ -116,3 +116,4 @@ dist
 node_modules/
 
 config/evars.js
+.vscode/
