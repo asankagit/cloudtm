@@ -66,23 +66,42 @@ function filterStateFromBucket(obj, filter){
 exports.lambdaHandler = async (event, context) => {
  
 const { queryStringParameters,  multiValueQueryStringParameters, body } = event
-const { filter, basketId } = queryStringParameters
+const { filter, basketId, siteId } = queryStringParameters
 // const bodyParams = JSON.parse(body)
 // const { basketId } = bodyParams
 
 // Async way
 const promise = new Promise(function(resolve, reject){
-
-    dynamodb.query({
-        TableName: 'BASKET_EVENTS',
-        IndexName: "BASKET_ID-TIME_STAMP-index",
-        ProjectionExpression: "EVENT_TYPE, BASKET_ID, BASKET_ITEM, ITEM_COUNT",
-        KeyConditionExpression: "BASKET_ID = :basket",
-
-        ExpressionAttributeValues: {
-            ":basket": {S : basketId}
+    let queryParams =  {}
+    console.log(basketId, siteId,">>>>", queryParams)
+    if (typeof basketId !=="undefined" && typeof siteId !== "undefined") {
+        queryParams = {
+            TableName: 'BASKET_EVENTS',
+            IndexName: "BASKET_ID-TIME_STAMP-index",
+            ProjectionExpression: "EVENT_TYPE,SITE_ID, BASKET_ID, BASKET_ITEM, ITEM_COUNT",
+            KeyConditionExpression: "BASKET_ID = :basket",
+    
+            ExpressionAttributeValues: {
+                ":basket": {S : basketId}
+            }
         }
+        
     }
+    else {
+        queryParams  = {
+            TableName: 'BASKET_EVENTS',
+            IndexName: "SITE_ID-TIME_STAMP-index",
+            ProjectionExpression: "EVENT_TYPE,SITE_ID, BASKET_ID, BASKET_ITEM, ITEM_COUNT",
+            KeyConditionExpression: "SITE_ID = :site",
+    
+            ExpressionAttributeValues: {
+                ":site": {S : siteId}
+            }
+        }
+
+    }
+    console.log(basketId, siteId,">>>>", queryParams)
+    dynamodb.query(queryParams
     , function(err, data) {
         if (err) {
             console.log("err", err);

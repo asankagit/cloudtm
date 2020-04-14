@@ -5,7 +5,7 @@ const dynamodb = new AWS.DynamoDB({
 });
 exports.clickStreamWriteHandler = (event,context, callback) => {
     const  {body } = event
-    const { type, timeStamp, basketId, basket_item, item_count} = JSON.parse(body)
+    const { type, timeStamp, basketId, basket_item, item_count, visitor, siteId} = JSON.parse(body)
     console.log(type, timeStamp, basketId, body)
     dynamodb.putItem({
             TableName: 'BASKET_EVENTS',
@@ -14,7 +14,9 @@ exports.clickStreamWriteHandler = (event,context, callback) => {
                 'EVENT_TYPE': { S: type },
                 'TIME_STAMP':{N: timeStamp.toString()},
                 'BASKET_ITEM': {S: basket_item},
-                'ITEM_COUNT': {N: item_count.toString()}
+                'ITEM_COUNT': {N: item_count.toString()},
+                'VISITOR': {S: visitor},
+                'SITE_ID': {S: siteId}
             }
         }
         , function(err, data) {
