@@ -23,15 +23,17 @@ Resources:
           MyLambdaTokenAuthorizer:
             FunctionArn: !GetAtt AuthValidateFunction.Arn
 
-  HelloWorldFunction:
+  ReadClickStreamFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: src/
+      Policies:
+        - AmazonDynamoDBFullAccess
       Handler: app.lambdaHandler
       Runtime: nodejs12.x
       
       Events:
-        HelloWorld:
+        ReadClickStream:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /clickstream
@@ -44,11 +46,13 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: src/clickStream
+      Policies:
+        - AmazonDynamoDBFullAccess
       Handler: app.clickStreamWriteHandler
       Runtime: nodejs12.x
       
       Events:
-        HelloWorld:
+        WriteClickStream:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /clickstream
@@ -244,28 +248,15 @@ Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  HelloWorldApi:
+  ReadClickStreamApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
     Value: !Sub "https://${CloudTagManagerApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/clickstream/"
-  HelloWorldFunction:
+  ReadClickStreamFunction:
     Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
+    Value: !GetAtt ReadClickStreamFunction.Arn
+  ReadClickStreamFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
-
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  KinsesisListenerApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${CloudTagManagerApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/kiness_listener/"
-  KinsesisListenerFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  KinsesisListenerFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt ReadClickStreamFunctionRole.Arn
 
 
   WriteClickStreamApi:
@@ -273,10 +264,10 @@ Outputs:
     Value: !Sub "https://${CloudTagManagerApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/kiness_listener/"
   WriteClickStreamFunction:
     Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
+    Value: !GetAtt WriteClickStreamFunction.Arn
   WriteClickStreamFunctionIamRole:
     Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+    Value: !GetAtt WriteClickStreamFunctionRole.Arn
 
   
   CtmKinesisStream:
