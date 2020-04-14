@@ -174,12 +174,51 @@ Resources:
             Method: get
             RestApiId: !Ref CloudTagManagerApi
 
+  ScrollSummaryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: src/kinesis_controller/
+      Policies:
+        - AmazonDynamoDBFullAccess # Give DynamoDB Full Access to your Lambda Function
+      Handler: dbwriter.listScrollDetails
+      Runtime: nodejs12.x
+      Events:
+        ScrollSummary:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /scrollSummary
+            Method: get
+            RestApiId: !Ref CloudTagManagerApi
+
   AuthValidateFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       CodeUri: src/authentication/
       Handler: perm.authorizer
       Runtime: nodejs12.x
+
+  KinesisConsumerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/kinesis_controller/
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: dbwriter.handler
+      Runtime: nodejs12.x
+      Timeout: 10
+      Tracing: Active
+      Events:
+        Stream:
+          Type: Kinesis
+          Properties:
+            Stream: !GetAtt CtmStream.Arn
+            BatchSize: 100
+            StartingPosition: LATEST
+
+  CtmStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1
 
 
 
@@ -221,3 +260,7 @@ Outputs:
     Description: "Implicit IAM Role created for Hello World function"
     Value: !GetAtt HelloWorldFunctionRole.Arn
 
+  
+  CtmKinesisStream:
+    Description: "Kinesis Stream"
+    Value: !GetAtt CtmStream.Arn
