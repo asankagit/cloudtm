@@ -96,6 +96,23 @@ Resources:
             RestApiId: !<!Ref> CloudTagManagerApi
             Auth:
               Authorizer: NONE
+  UserSignUpFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: UserSignUpFunction
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: app.signUp
+      Runtime: nodejs12.x
+      Events:
+        UserSignUp:
+          Type: Api
+          Properties:
+            Path: /users/signUp
+            Method: post
+            RestApiId: !<!Ref> CloudTagManagerApi
+            Auth:
+              Authorizer: NONE
   SiteAddFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -158,12 +175,48 @@ Resources:
             Path: /visitors
             Method: get
             RestApiId: !<!Ref> CloudTagManagerApi
+  ScrollSummaryFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: ScrollSummaryFunction
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: app.listScrollDetails
+      Runtime: nodejs12.x
+      Events:
+        ScrollSummary:
+          Type: Api
+          Properties:
+            Path: /scrollSummary
+            Method: get
+            RestApiId: !<!Ref> CloudTagManagerApi
   AuthValidateFunction:
     Type: 'AWS::Serverless::Function'
     Properties:
       CodeUri: AuthValidateFunction
       Handler: app.authorizer
       Runtime: nodejs12.x
+  KinesisConsumerFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      CodeUri: KinesisConsumerFunction
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Handler: app.handler
+      Runtime: nodejs12.x
+      Timeout: 10
+      Tracing: Active
+      Events:
+        Stream:
+          Type: Kinesis
+          Properties:
+            Stream: !<!GetAtt> CtmStream.Arn
+            BatchSize: 100
+            StartingPosition: LATEST
+  CtmStream:
+    Type: 'AWS::Kinesis::Stream'
+    Properties:
+      ShardCount: 1
 Outputs:
   HelloWorldApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World function
@@ -195,3 +248,6 @@ Outputs:
   WriteClickStreamFunctionIamRole:
     Description: Implicit IAM Role created for Hello World function
     Value: !<!GetAtt> HelloWorldFunctionRole.Arn
+  CtmKinesisStream:
+    Description: Kinesis Stream
+    Value: !<!GetAtt> CtmStream.Arn

@@ -77,6 +77,21 @@
       "sourceMaps": true
     },
     {
+      "name": "UserSignUpFunction",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5858,
+      "localRoot": "${workspaceRoot}/.aws-sam/build/UserSignUpFunction",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "outFiles": [
+        "${workspaceRoot}/.aws-sam/build/UserSignUpFunction/app.js"
+      ],
+      "sourceMaps": true
+    },
+    {
       "name": "SiteAddFunction",
       "type": "node",
       "request": "attach",
@@ -137,6 +152,21 @@
       "sourceMaps": true
     },
     {
+      "name": "ScrollSummaryFunction",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5858,
+      "localRoot": "${workspaceRoot}/.aws-sam/build/ScrollSummaryFunction",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "outFiles": [
+        "${workspaceRoot}/.aws-sam/build/ScrollSummaryFunction/app.js"
+      ],
+      "sourceMaps": true
+    },
+    {
       "name": "AuthValidateFunction",
       "type": "node",
       "request": "attach",
@@ -148,6 +178,21 @@
       "stopOnEntry": false,
       "outFiles": [
         "${workspaceRoot}/.aws-sam/build/AuthValidateFunction/app.js"
+      ],
+      "sourceMaps": true
+    },
+    {
+      "name": "KinesisConsumerFunction",
+      "type": "node",
+      "request": "attach",
+      "address": "localhost",
+      "port": 5858,
+      "localRoot": "${workspaceRoot}/.aws-sam/build/KinesisConsumerFunction",
+      "remoteRoot": "/var/task",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "outFiles": [
+        "${workspaceRoot}/.aws-sam/build/KinesisConsumerFunction/app.js"
       ],
       "sourceMaps": true
     }
