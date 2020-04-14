@@ -73,7 +73,7 @@ const { filter, basketId, siteId } = queryStringParameters
 // Async way
 const promise = new Promise(function(resolve, reject){
     let queryParams =  {}
-    console.log(basketId, siteId,">>>>", queryParams)
+
     if (typeof basketId !=="undefined" && typeof siteId !== "undefined") {
         queryParams = {
             TableName: 'BASKET_EVENTS',
@@ -100,7 +100,7 @@ const promise = new Promise(function(resolve, reject){
         }
 
     }
-    console.log(basketId, siteId,">>>>", queryParams)
+
     dynamodb.query(queryParams
     , function(err, data) {
         if (err) {
